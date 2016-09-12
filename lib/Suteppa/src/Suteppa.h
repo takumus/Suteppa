@@ -5,22 +5,18 @@
 class Suteppa
 {
 	public:
-		Suteppa(int step, int adStep, int begin, int max);
-		void set(int step);
-		int step();
+		Suteppa();
+		void init(int allStep, int adStep, int begin, int max, void (*rotater)(int));
+		void rotateR(int step, bool smooth);
+		void rotateA();
 	private:
-		int _step;
+		int _allStep;
 		int _begin;
 		int _max;
 		int _mbDiff;
 		int _adStep;
-
-		int _index;
-		int _tmpAdStep;
-		int _tmpStep;
-		float _tmpMax;
-		float _tmpR;
 		float sigmoid(float x);
+		void (*_rotater)(int);
 };
 
 #endif

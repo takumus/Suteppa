@@ -1,44 +1,59 @@
 #include "Suteppa.h"
-Suteppa::Suteppa(int step, int adStep, int begin, int max)
+Suteppa::Suteppa()
 {
-	_step = step;
+}
+void Suteppa::init(int allStep, int adStep, int begin, int max, void (*rotater)(int))
+{
+	_allStep = allStep;
 	_begin = begin;
 	_max = max;
 	_adStep = adStep;
 	_mbDiff = _begin-_max;
+	_rotater = rotater;
 }
-void Suteppa::set(int step)
+void Suteppa::rotateR(int step, bool smooth)
 {
-	_tmpAdStep = _adStep;
-	_tmpMax = 1;
-	_tmpStep = step;
-	float interval = _tmpMax / (float)_tmpAdStep;
-	if(step < _tmpAdStep*2.1) {
-		_tmpAdStep = step/2.1;
+	int adStep = _adStep;
+	int max = 1;
+	int direction = 1;
+	float interval = max / (float)adStep;
+	if(step < 0){
+		direction = -1;
+		step *= -1;
 	}
-	_tmpMax = interval * _tmpAdStep;
-	_index = 0;
-}
-int Suteppa::step()
-{
-	if(_index >= _tmpStep) return 0;
-	_tmpR = -1;
-	if (_index <= _tmpAdStep) {
-		_tmpR = (_index / (float)_tmpAdStep);
-	}else if (_tmpStep - _index <= _tmpAdStep + 1) {
-		_tmpR = ((_tmpStep - 1) - _index) / (float)_tmpAdStep;
+	if(step < adStep*2.1) {
+		adStep = step/2.1;
 	}
-	float p;
-	if(_tmpR<0){
-		p = _tmpMax;
+	if(adStep < 1) smooth = false;
+	max = interval * adStep;
+	float r = 0;
+	if(smooth){
+		for(int i = 0; i < step; i ++){
+			_rotater(direction);
+			r = -1;
+			if (i <= adStep) {
+				r = (i / (float)adStep);
+			}else if (step - i <= adStep + 1) {
+				r = ((step - 1) - i) / (float)adStep;
+			}
+			float p;
+			if(r<0){
+				p = max;
+			}else{
+				p = sin(acos(1-r)) * max;
+			}
+			int interval = (1-p)*_mbDiff + _max;
+			delayMicroseconds(interval);
+		}
 	}else{
-		p = sin(acos(1-_tmpR)) * _tmpMax;
+		for(int i = 0; i < step; i ++){
+			_rotater(direction);
+			delayMicroseconds(_max);
+		}
 	}
-	_index ++;
-	if(_index >= _tmpStep) return 0;
-	int interval = (1-p)*_mbDiff + _max;
-	delayMicroseconds(interval);
-	return 1;
+}
+void Suteppa::rotateA()
+{
 }
 float Suteppa::sigmoid(float x)
 {
