@@ -32,7 +32,7 @@ void setup()
 void loop()
 {
 	if(digitalRead(2) == 0){
-		s.rotateR(1024*3);
+		s.rotator(1024*3);
 	}
 	if(digitalRead(3) == 0){
 		s.rotateA(0, true);

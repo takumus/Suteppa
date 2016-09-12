@@ -2,7 +2,7 @@
 Suteppa::Suteppa()
 {
 }
-void Suteppa::init(int allStep, int adStep, int begin, int max, bool smooth, void (*rotater)(int))
+void Suteppa::init(int allStep, int adStep, int begin, int max, bool smooth, void (*rotator)(int))
 {
 	_smooth = smooth;
 	_allStep = allStep;
@@ -10,9 +10,9 @@ void Suteppa::init(int allStep, int adStep, int begin, int max, bool smooth, voi
 	_max = max;
 	_adStep = adStep;
 	_mbDiff = _begin-_max;
-	_rotater = rotater;
+	_rotator = rotator;
 }
-void Suteppa::rotateR(int step)
+void Suteppa::rotator(int step)
 {
 	_step += step;
 	int adStep = _adStep;
@@ -32,7 +32,7 @@ void Suteppa::rotateR(int step)
 	float r = 0;
 	if(smooth){
 		for(int i = 0; i < step; i ++){
-			_rotater(direction);
+			_rotator(direction);
 			r = -1;
 			if (i <= adStep) {
 				r = (i / (float)adStep);
@@ -50,7 +50,7 @@ void Suteppa::rotateR(int step)
 		}
 	}else{
 		for(int i = 0; i < step; i ++){
-			_rotater(direction);
+			_rotator(direction);
 			delayMicroseconds(_max);
 		}
 	}
@@ -63,15 +63,15 @@ void Suteppa::rotateA(int step, bool skip)
 		int diff = abs(step - _step);
 		if(diff > _allStep / 2){
 			if(_step < step){
-				rotateR(-(_allStep - diff));
+				rotator(-(_allStep - diff));
 			}else{
-				rotateR((_allStep - diff));
+				rotator((_allStep - diff));
 			}
 		}else{
-			rotateR(step - _step);
+			rotator(step - _step);
 		}
 	}else{
-		rotateR(step - _step);
+		rotator(step - _step);
 	}
 	_step = step;
 }
