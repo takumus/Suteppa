@@ -9,27 +9,38 @@ Suteppa::Suteppa(int step, int adStep, int begin, int max)
 }
 void Suteppa::set(int step)
 {
-	int adStep = _adStep;
-	float max = 1;
-	float interval = max / (float)adStep;
-	if(step < adStep*2.1) {
-		adStep = step/2.1;
+	_tmpAdStep = _adStep;
+	_tmpMax = 1;
+	_tmpStep = step;
+	float interval = _tmpMax / (float)_tmpAdStep;
+	if(step < _tmpAdStep*2.1) {
+		_tmpAdStep = step/2.1;
 	}
-	max = interval * adStep;
-	float r;
-	for (int i = 0; i < step; i++) {
-		r = -1;
-		if (i <= adStep) {
-			r = (i / (float)adStep);
-		}else if (step - i <= adStep + 1) {
-			r = ((step - 1) - i) / (float)adStep;
-		}
-		float p;
-		if(r<0){
-			p = max;
-		}else{
-			p = (cos(r * PI+PI)+1) / 2 * max;
-		}
-		Serial.println((1-p)*_mbDiff + _max);
+	_tmpMax = interval * _tmpAdStep;
+	_index = 0;
+}
+int Suteppa::step()
+{
+	if(_index >= _tmpStep) return 0;
+	_tmpR = -1;
+	if (_index <= _tmpAdStep) {
+		_tmpR = (_index / (float)_tmpAdStep);
+	}else if (_tmpStep - _index <= _tmpAdStep + 1) {
+		_tmpR = ((_tmpStep - 1) - _index) / (float)_tmpAdStep;
 	}
+	float p;
+	if(_tmpR<0){
+		p = _tmpMax;
+	}else{
+		p = sin(acos(1-_tmpR)) * _tmpMax;
+	}
+	_index ++;
+	if(_index >= _tmpStep) return 0;
+	int interval = (1-p)*_mbDiff + _max;
+	delayMicroseconds(interval);
+	return 1;
+}
+float Suteppa::sigmoid(float x)
+{
+	return 1 / (1 + exp(-7 * x));
 }
