@@ -12,7 +12,7 @@ void Suteppa::init(int allStep, int adStep, int begin, int max, bool smooth, voi
 	_mbDiff = _begin-_max;
 	_rotator = rotator;
 }
-void Suteppa::rotator(int step)
+void Suteppa::rotateR(int step)
 {
 	_step += step;
 	int adStep = _adStep;
@@ -63,15 +63,15 @@ void Suteppa::rotateA(int step, bool skip)
 		int diff = abs(step - _step);
 		if(diff > _allStep / 2){
 			if(_step < step){
-				rotator(-(_allStep - diff));
+				rotateR(-(_allStep - diff));
 			}else{
-				rotator((_allStep - diff));
+				rotateR((_allStep - diff));
 			}
 		}else{
-			rotator(step - _step);
+			rotateR(step - _step);
 		}
 	}else{
-		rotator(step - _step);
+		rotateR(step - _step);
 	}
 	_step = step;
 }

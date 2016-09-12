@@ -7,6 +7,6 @@ Suteppa	KEYWORD1	Suteppa
 # Methods and Functions (KEYWORD2)
 #######################################
 init	KEYWORD2
-rotator	KEYWORD2
+rotateR	KEYWORD2
 rotateA	KEYWORD2
 setHome	KEYWORD2

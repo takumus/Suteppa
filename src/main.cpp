@@ -31,11 +31,20 @@ void setup()
 }
 void loop()
 {
-	if(digitalRead(2) == 0){
-		s.rotator(1024*3);
-	}
-	if(digitalRead(3) == 0){
+	while(true){
+		delay(1000);
+		s.rotateR(1024*3);
+		s.rotateR(-1024*3);
+		s.rotateR(1024);
+		s.rotateR(-1024);
+		s.rotateR(1024);
+		s.rotateR(-1024*3);
+		s.rotateR(1024*2);
+		s.rotateR(-1024*2);
+		s.rotateR(1024*3);
+		s.rotateR(-1024*2);
 		s.rotateA(0, true);
+		delay(1000);
 	}
 }
 void step(int d)
