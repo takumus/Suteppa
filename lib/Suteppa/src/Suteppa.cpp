@@ -43,9 +43,9 @@ void Suteppa::rotateR(int step)
 			if(r<0){
 				p = max;
 			}else{
-				p = sin(acos(1-r)) * max;
+				p = sin(acos(1 - r)) * max;
 			}
-			int interval = (1-p)*_mbDiff + _max;
+			int interval = (1 - p) * _mbDiff + _max;
 			delayMicroseconds(interval);
 		}
 	}else{
