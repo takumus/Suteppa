@@ -7,8 +7,11 @@ class Suteppa
 	public:
 		Suteppa();
 		void init(int allStep, int adStep, int begin, int max, bool smooth, void (*rotator)(int));
+		void rotateR(int step, int (*update)(int));
 		void rotateR(int step);
+		void rotateA(int step, bool skip, int (*update)(int));
 		void rotateA(int step, bool skip);
+		void rotateA(int step);
 		void setHome();
 	private:
 		bool _smooth;
