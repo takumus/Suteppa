@@ -2,15 +2,28 @@
 Suteppa::Suteppa()
 {
 }
-void Suteppa::init(int allStep, int adStep, int begin, int max, bool smooth, void (*rotator)(int))
+void Suteppa::init(int allStep, int adStep, int begin, int max, void (*rotator)(int))
 {
-	_smooth = smooth;
 	_allStep = allStep;
 	_begin = begin;
 	_max = max;
 	_adStep = adStep;
 	_mbDiff = _begin-_max;
 	_rotator = rotator;
+}
+void Suteppa::setMax(int max)
+{
+	_max = max;
+	_mbDiff = _begin-_max;
+}
+void Suteppa::setBegin(int begin)
+{
+	_begin = begin;
+	_mbDiff = _begin-_max;
+}
+void Suteppa::setSmooth(bool smooth)
+{
+	_smooth = smooth;
 }
 void Suteppa::rotateR(int step)
 {
