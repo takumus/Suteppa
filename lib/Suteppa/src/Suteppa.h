@@ -20,6 +20,7 @@ class Suteppa
 		int _adStep;
 		float sigmoid(float x);
 		void (*_rotator)(int);
+		void _delay(int time);
 };
 
 #endif

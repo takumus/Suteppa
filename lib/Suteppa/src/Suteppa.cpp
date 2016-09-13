@@ -46,12 +46,12 @@ void Suteppa::rotateR(int step)
 				p = sin(acos(1 - r)) * max;
 			}
 			int interval = (1 - p) * _mbDiff + _max;
-			delayMicroseconds(interval);
+			_delay(interval);
 		}
 	}else{
 		for(int i = 0; i < step; i ++){
 			_rotator(direction);
-			delayMicroseconds(_max);
+			_delay(_max);
 		}
 	}
 }
@@ -82,4 +82,12 @@ void Suteppa::setHome()
 float Suteppa::sigmoid(float x)
 {
 	return 1 / (1 + exp(-7 * x));
+}
+void Suteppa::_delay(int time)
+{
+	if(time < 10000){
+		delayMicroseconds(time);
+	}else{
+		delay(time/1000);
+	}
 }
