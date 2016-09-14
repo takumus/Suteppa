@@ -11,13 +11,13 @@ class Suteppa
 		void setBegin(int begin);
 		void setSmooth(bool smooth);
 
-		void rotateR(int step, int (*update)(int));
-		void rotateR(int step);
-		void rotateA(int step, bool skip, int (*update)(int));
-		void rotateA(int step, bool skip);
-		void rotateA(int step);
+		void rotate(int step, int mode, int (*update)(int));
+		void rotate(int step, int mode);
 		void setHome();
 	private:
+		void _delay(int time);
+		void _rotateAbsolute(int step, bool skip, int (*update)(int));
+		void _rotateRelative(int step, int (*update)(int));
 		bool _smooth = false;
 		int _step;
 		int _allStep;
@@ -27,7 +27,6 @@ class Suteppa
 		int _adStep;
 		float sigmoid(float x);
 		void (*_rotator)(int);
-		void _delay(int time);
 };
 
 #endif
