@@ -11,13 +11,18 @@ class Suteppa
 		void setBegin(int begin);
 		void setSmooth(bool smooth);
 
-		void rotate(int step, int mode, int (*update)(int));
-		void rotate(int step, int mode);
+		void rotate(int mode, int step, int (*update)(int));
+		void rotate(int mode, int step);
 		void setHome();
+
+		static const int RELATIVE = 0;
+		static const int ABSOLUTE = 1;
+		static const int ABSOLUTE_SKIP = 2;
 	private:
 		void _delay(int time);
 		void _rotateAbsolute(int step, bool skip, int (*update)(int));
 		void _rotateRelative(int step, int (*update)(int));
+		//仮用アップデート
 		bool _smooth = false;
 		int _step;
 		int _allStep;

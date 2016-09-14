@@ -26,7 +26,7 @@ void Suteppa::setSmooth(bool smooth)
 	_smooth = smooth;
 }
 
-void Suteppa::rotate(int step, int mode, int (*update)(int))
+void Suteppa::rotate(int mode, int step, int (*update)(int))
 {
 	if(mode == 0){
 		_rotateRelative(step, update);
@@ -37,9 +37,9 @@ void Suteppa::rotate(int step, int mode, int (*update)(int))
 	}
 }
 
-void Suteppa::rotate(int step, int mode)
+void Suteppa::rotate(int mode, int step)
 {
-	rotate(step, mode, NULL);
+	rotate(mode, step, NULL);
 }
 
 void Suteppa::_rotateRelative(int step, int (*update)(int))
@@ -55,7 +55,7 @@ void Suteppa::_rotateRelative(int step, int (*update)(int))
 		direction = -1;
 		step *= -1;
 	}
-	if(step < adStep*ADRATIO) adStep = step/ADRATIO;
+	if(step < adStep*2.1) adStep = step/2.1;
 
 	if(adStep < 1) smooth = false;
 	max = interval * adStep;
