@@ -6,10 +6,14 @@ class Suteppa
 {
 	public:
 		Suteppa();
-		void init(int allStep, int adStep, int begin, int max, void (*rotator)(int));
-		void setMax(int max);
-		void setBegin(int begin);
+		void init(int allStep, int adStep, void (*rotator)(int));
+		void setMax(unsigned long max);
+		void setBegin(unsigned long begin);
 		void setSmooth(bool smooth);
+		
+		int getStep(){return _step;};
+		unsigned long getMax(){return _max;};
+		unsigned long getBegin(){return _begin;};
 
 		void rotate(int mode, int step, int (*update)(int));
 		void rotate(int mode, int step);
@@ -26,9 +30,9 @@ class Suteppa
 		bool _smooth = false;
 		int _step;
 		int _allStep;
-		int _begin;
-		int _max;
-		int _mbDiff;
+		unsigned long _begin;
+		unsigned long _max;
+		unsigned long _mbDiff;
 		int _adStep;
 		float sigmoid(float x);
 		void (*_rotator)(int);

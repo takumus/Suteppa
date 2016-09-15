@@ -2,21 +2,21 @@
 Suteppa::Suteppa()
 {
 }
-void Suteppa::init(int allStep, int adStep, int begin, int max, void (*rotator)(int))
+void Suteppa::init(int allStep, int adStep, void (*rotator)(int))
 {
 	_allStep = allStep;
-	_begin = begin;
-	_max = max;
+	_begin = 20000;
+	_max = 10000;
 	_adStep = adStep;
 	_mbDiff = _begin-_max;
 	_rotator = rotator;
 }
-void Suteppa::setMax(int max)
+void Suteppa::setMax(unsigned long max)
 {
 	_max = max;
 	_mbDiff = _begin-_max;
 }
-void Suteppa::setBegin(int begin)
+void Suteppa::setBegin(unsigned long begin)
 {
 	_begin = begin;
 	_mbDiff = _begin-_max;
