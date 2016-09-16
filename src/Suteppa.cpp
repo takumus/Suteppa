@@ -2,31 +2,34 @@
 Suteppa::Suteppa()
 {
 }
-void Suteppa::init(int allStep, int adStep, void (*rotator)(int))
+void Suteppa::init(unsigned long allStep, void (*rotator)(int))
 {
 	_allStep = allStep;
-	_begin = 20000;
-	_max = 10000;
-	_adStep = adStep;
-	_mbDiff = _begin-_max;
+	_speed = 10000;
 	_rotator = rotator;
 }
-void Suteppa::setMax(unsigned long max)
+void Suteppa::setSpeed(unsigned long speed)
 {
-	_max = max;
-	_mbDiff = _begin-_max;
+	_speed = speed;
 }
-void Suteppa::setBegin(unsigned long begin)
+void Suteppa::beginSmooth(unsigned long step, unsigned long initSpeed)
 {
-	_begin = begin;
-	_mbDiff = _begin-_max;
+	_smooth = true;
+	_smoothStep = step;
+	_initDiff = initSpeed-_speed;
 }
-void Suteppa::setSmooth(bool smooth)
+void Suteppa::beginSmooth()
 {
-	_smooth = smooth;
+	_smooth = true;
+}
+void Suteppa::setDefaultSmooth(unsigned long step, unsigned long initSpeed)
+{
+	_smoothStep = step;
+	_initDiff = initSpeed-_speed;
 }
 
-void Suteppa::rotate(int mode, int step, int (*update)(int))
+
+void Suteppa::rotate(int mode, long step, int (*update)(int))
 {
 	if(mode == 0){
 		_rotateRelative(step, update);
@@ -37,17 +40,16 @@ void Suteppa::rotate(int mode, int step, int (*update)(int))
 	}
 }
 
-void Suteppa::rotate(int mode, int step)
+void Suteppa::rotate(int mode, long step)
 {
 	rotate(mode, step, NULL);
 }
 
-void Suteppa::_rotateRelative(int step, int (*update)(int))
+void Suteppa::_rotateRelative(long step, int (*update)(int))
 {
-	int adStep = _adStep;
-	int max = 1;
+	unsigned long smoothStep = _smoothStep;
 	int direction = 1;
-	float interval = max / (float)adStep;
+	float interval = 1 / (float)smoothStep;
 	bool smooth = _smooth;
 	float r = 0;
 
@@ -55,46 +57,45 @@ void Suteppa::_rotateRelative(int step, int (*update)(int))
 		direction = -1;
 		step *= -1;
 	}
-	if(step < adStep*2.1) adStep = step/2.1;
-
-	if(adStep < 1) smooth = false;
-	max = interval * adStep;
+	unsigned long ustep = step;
+	if(step < smoothStep*2.1) smoothStep = step/2.1;
+	if(smoothStep < 1) smooth = false;
+	float max = interval * smoothStep;
 	if(update && update(_step)) return;
 	if(smooth){
-		for(int i = 0; i < step; i ++){
+		for(unsigned int i = 0; i < ustep; i ++){
 			_step += direction;
 			_rotator(direction);
 			r = -1;
-			if (i <= adStep) {
-				r = (i / (float)adStep);
-			}else if (step - i <= adStep + 1) {
-				r = ((step - 1) - i) / (float)adStep;
+			if (i <= smoothStep) {
+				r = (i / (float)smoothStep);
+			}else if (ustep - i <= smoothStep + 1) {
+				r = ((ustep - 1) - i) / (float)smoothStep;
 			}
 			float p;
-			if(r<0){
+			if(r < 0){
 				p = max;
 			}else{
 				p = sin(acos(1 - r)) * max;
 			}
-			int interval = (1 - p) * _mbDiff + _max;
-			_delay(interval);
+			_delay((1 - p) * _initDiff + _speed);
 			if(update && update(_step)) break;
 		}
 	}else{
-		for(int i = 0; i < step; i ++){
+		for(unsigned int i = 0; i < ustep; i ++){
 			_step += direction;
 			_rotator(direction);
-			_delay(_max);
+			_delay(_speed);
 			if(update && update(_step)) break;
 		}
 	}
 }
-void Suteppa::_rotateAbsolute(int step, bool skip, int (*update)(int))
+void Suteppa::_rotateAbsolute(long step, bool skip, int (*update)(int))
 {
 	if(skip){
 		step = step%_allStep;
 		_step = _step%_allStep;
-		int diff = abs(step - _step);
+		unsigned long diff = abs(step - _step);
 		if(diff > _allStep / 2){
 			if(_step < step){
 				step = -(_allStep - diff);
@@ -117,7 +118,7 @@ float Suteppa::sigmoid(float x)
 {
 	return 1 / (1 + exp(-7 * x));
 }
-void Suteppa::_delay(int time)
+void Suteppa::_delay(unsigned long time)
 {
 	if(time < 10000){
 		delayMicroseconds(time);
