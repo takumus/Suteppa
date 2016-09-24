@@ -13,10 +13,10 @@ void setSpeed(unsigned long speed);
 ```
 回転  
 (`回転モード`, `ステップ数(正で正転、負で逆転)`)  
-(`回転モード`, `ステップ数(正で正転、負で逆転)`, `ステップごとに呼ばれる関数`)  
+(`回転モード`, `ステップ数(正で正転、負で逆転)`, `自動tick`)  
 ```c
 void rotate(int mode, long step);
-void rotate(int mode, long step, int (*update)(int));
+void rotate(int mode, long step, bool sync);
 ```
 スムーズモードセット(`加速減速に使うステップ数`, `開始速度マイクロ秒`)
 ```c
@@ -47,29 +47,29 @@ int hs[8] = {B1000,B1100,B0100,B0110,B0010,B0011,B0001,B1001};
 Suteppa suteppa;
 void step(int d);
 void setup(){
-  pinMode(IN1, OUTPUT);
-  pinMode(IN2, OUTPUT);
-  pinMode(IN3, OUTPUT);
-  pinMode(IN4, OUTPUT);
-  //一回転のステップ数, ステップ用関数
-  suteppa.init(MAX, step);
-  //500マイクロ秒ごとにステップする
-  suteppa.setSpeed(500);
+	pinMode(IN1, OUTPUT);
+	pinMode(IN2, OUTPUT);
+	pinMode(IN3, OUTPUT);
+	pinMode(IN4, OUTPUT);
+	//一回転のステップ数, ステップ用関数
+	suteppa.init(MAX, step);
+	//500マイクロ秒ごとにステップする
+	suteppa.setSpeed(500);
 }
 void loop()
 {
-  //MAXステップ回転する(相対角度で1回転)
-  suteppa.rotate(Suteppa::RELATIVE, MAX);
-  //1秒待つ
-  delay(1000);
-  //スムーズモードをセットする(加減速に100ステップ, 1000マイクロ秒から500まで加速)
-  suteppa.beginSmooth(100, 1000);
-  //逆回転する(絶対角度で0度に戻す)
-  suteppa.rotate(Suteppa::ABSOLUTE, 0);
-  //スムーズモード終了
-  suyeppa.endSmooth();
-  //1秒待つ
-  delay(1000);
+	//MAXステップ回転する(相対角度で1回転)
+	suteppa.rotate(Suteppa::RELATIVE, MAX);
+	//1秒待つ
+	delay(1000);
+	//スムーズモードをセットする(加減速に100ステップ, 1000マイクロ秒から500まで加速)
+	suteppa.beginSmooth(100, 1000);
+	//逆回転する(絶対角度で0度に戻す)
+	suteppa.rotate(Suteppa::ABSOLUTE, 0);
+	//スムーズモード終了
+	suyeppa.endSmooth();
+	//1秒待つ
+	delay(1000);
 }
 //ステッピングモーターを回す関数(dは方向。-1か1)
 void step(int d)
