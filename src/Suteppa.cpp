@@ -50,12 +50,10 @@ bool Suteppa::tick()
 			p = sin(acos(1 - r)) * _r_max;
 		}
 		_r_interval = (1 - p) * _initDiff + _speed;
-		//if(update && update(_step)) break;
 	}else{
 		_step += _r_direction;
 		_rotator(_r_direction);
 		_r_interval = _speed;
-		//if(update && update(_step)) break;
 	}
 	_r_i ++;
 	return true;
@@ -96,9 +94,7 @@ void Suteppa::_rotateRelative(long step, bool sync)
 	_r_time = 0;
 	_r_i = 0;
 	if(sync){
-		while(tick()){
-			delayMicroseconds(10);
-		}
+		while(tick()){}
 	}
 }
 void Suteppa::_rotateAbsolute(long step, bool skip, bool sync)
