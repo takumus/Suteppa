@@ -11,12 +11,14 @@ void Suteppa::init(unsigned long allStep, void (*rotator)(int))
 void Suteppa::setSpeed(unsigned long speed)
 {
 	_speed = speed;
+	_initDiff = _initSpeed-_speed;
 }
 void Suteppa::beginSmooth(unsigned long step, unsigned long initSpeed)
 {
 	_smooth = true;
 	_smoothStep = step;
-	_initDiff = initSpeed-_speed;
+	_initSpeed = initSpeed;
+	_initDiff = _initSpeed-_speed;
 }
 void Suteppa::beginSmooth()
 {

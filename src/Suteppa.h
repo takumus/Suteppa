@@ -17,6 +17,7 @@ class Suteppa
 		void endSmooth(){_smooth = false;};
 
 		long getStep(){return _step;};
+		long getStepAbsolute(){return _step%_allStep;};
 
 		unsigned long getSpeed(){return _speed;};
 
@@ -45,6 +46,7 @@ class Suteppa
 		unsigned long _speed;
 		unsigned long _initDiff;
 		unsigned long _smoothStep;
+		unsigned long _initSpeed;
 
 		int _r_direction;
 		unsigned long _r_step;
