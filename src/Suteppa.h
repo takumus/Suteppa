@@ -20,10 +20,11 @@ class Suteppa
 
 		unsigned long getSpeed(){return _speed;};
 
-		void rotate(int mode, long step, int (*update)(int));
+		void rotate(int mode, long step, bool sync);
 		void rotate(int mode, long step);
 
 		void setHome();
+		bool tick();
 
 		static const int RELATIVE = 0;
 		static const int ABSOLUTE = 1;
@@ -31,8 +32,8 @@ class Suteppa
 	private:
 		void _delay(unsigned long time);
 		
-		void _rotateAbsolute(long step, bool skip, int (*update)(int));
-		void _rotateRelative(long step, int (*update)(int));
+		void _rotateAbsolute(long step, bool skip, bool sync);
+		void _rotateRelative(long step, bool sync);
 
 		void (*_rotator)(int);
 
@@ -44,6 +45,15 @@ class Suteppa
 		unsigned long _speed;
 		unsigned long _initDiff;
 		unsigned long _smoothStep;
+
+		int _r_direction;
+		unsigned long _r_step;
+		unsigned long _r_smoothStep;
+		bool _r_smooth;
+		float _r_max;
+		unsigned int _r_i;
+		unsigned long _r_time;
+		unsigned long _r_interval;
 		
 		float sigmoid(float x);
 };
