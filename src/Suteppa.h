@@ -48,6 +48,9 @@ class Suteppa
 		unsigned long _smoothStep;
 		unsigned long _initSpeed;
 
+		unsigned long _defaultSmoothStep;
+		unsigned long _defaultInitSpeed;
+
 		int _r_direction;
 		unsigned long _r_step;
 		unsigned long _r_smoothStep;
