@@ -11,11 +11,13 @@ void Suteppa::init(unsigned long allStep, void (*rotator)(int))
 void Suteppa::setSpeed(unsigned long speed)
 {
 	_speed = speed;
+	_initDiff = _initSpeed - _speed;
 }
 void Suteppa::beginSmooth(unsigned long step, unsigned long initSpeed)
 {
 	_smoothStep = step;
-	_initDiff = initSpeed - _speed;
+	_initSpeed = initSpeed;
+	_initDiff = _initSpeed - _speed;
 	_smooth = true;
 }
 void Suteppa::beginSmooth()
@@ -91,12 +93,13 @@ void Suteppa::_rotateRelative(long step, bool sync)
 	_r_step = step;
 	if(step < _r_smoothStep*2.1) _r_smoothStep = step/2.1;
 	if(_r_smoothStep < 1) _r_smooth = false;
+	if(_initSpeed < _speed) _r_smooth = false;
 	_r_max = interval * _r_smoothStep;
 	_r_interval = 0;
 	_r_time = 0;
 	_r_i = 0;
 	if(sync){
-		while(tick()){}
+		while(tick());
 	}
 }
 void Suteppa::_rotateAbsolute(long step, bool skip, bool sync)
