@@ -2,11 +2,16 @@
 Suteppa::Suteppa()
 {
 }
-void Suteppa::init(unsigned long allStep, void (*rotator)(int))
+void Suteppa::init(unsigned long allStep, void (*stepper)(int), void (*turner)(int))
 {
 	_allStep = allStep;
 	_speed = 10000;
-	_rotator = rotator;
+	_stepper = stepper;
+	_turner = turner;
+}
+void Suteppa::init(unsigned long allStep, void (*stepper)(int))
+{
+	init(allStep, stepper, NULL);
 }
 void Suteppa::setSpeed(unsigned long speed)
 {
@@ -40,23 +45,20 @@ bool Suteppa::tick()
 	_r_time = time;
 	if(_r_smooth){
 		_step += _r_direction;
-		_rotator(_r_direction);
-		float r = -1;
+		_stepper(_r_direction);
+		float r;
+		float p = _r_max;
 		if (_r_i <= _r_smoothStep) {
 			r = (_r_i / (float)_r_smoothStep);
+			p = sin(r*M_PI/2) * _r_max;
 		}else if (_r_step - _r_i <= _r_smoothStep + 1) {
 			r = ((_r_step - 1) - _r_i) / (float)_r_smoothStep;
-		}
-		float p;
-		if(r < 0){
-			p = _r_max;
-		}else{
-			p = sin(acos(1 - r)) * _r_max;
+			p = sin(r*M_PI/2) * _r_max;
 		}
 		_r_interval = (1 - p) * _initDiff + _speed;
 	}else{
 		_step += _r_direction;
-		_rotator(_r_direction);
+		_stepper(_r_direction);
 		_r_interval = _speed;
 	}
 	_r_i ++;
@@ -90,6 +92,7 @@ void Suteppa::_rotateRelative(long step, bool sync)
 		_r_direction = -1;
 		step *= -1;
 	}
+	if(_turner) _turner(_r_direction);
 	_r_step = step;
 	if(step < _r_smoothStep*2.1) _r_smoothStep = step/2.1;
 	if(_r_smoothStep < 1) _r_smooth = false;

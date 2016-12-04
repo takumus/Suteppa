@@ -6,7 +6,8 @@ class Suteppa
 {
 	public:
 		Suteppa();
-		void init(unsigned long allStep, void (*rotator)(int));
+		void init(unsigned long allStep, void (*stepper)(int), void(*turner)(int));
+		void init(unsigned long allStep, void (*stepper)(int));
 		void setSpeed(unsigned long speed);
 		
 		void setDefaultSmooth(unsigned long step, unsigned long initSpeed);
@@ -36,7 +37,8 @@ class Suteppa
 		void _rotateAbsolute(long step, bool skip, bool sync);
 		void _rotateRelative(long step, bool sync);
 
-		void (*_rotator)(int);
+		void (*_stepper)(int);
+		void (*_turner)(int);
 
 		bool _smooth = false;
 		
